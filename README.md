@@ -39,5 +39,5 @@ export ENV=prod
 ```
 - Then run:
 ```bash
-(cd env/us-east1/<resource-dir> && tg apply)
+(cd env/us-east-1/<resource-dir> && tg apply)
 ```
