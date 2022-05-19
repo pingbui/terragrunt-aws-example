@@ -36,7 +36,7 @@ remote_state {
   config = {
     encrypt        = true
     bucket         = format("${local.project_name}-tfstate-%s", get_aws_account_id())
-    key            = "${path_relative_to_include()}/terraform.tfstate"
+    key            = local.env == "common" ? "${path_relative_to_include()}/terraform.tfstate" : "${replace(path_relative_to_include(), "env/", "${local.env}/")}/terraform.tfstate"
     region         = try(local.global_vars.locals.state_region, local.aws_region)
     dynamodb_table = "${local.project_name}-terraform-locks"
 
