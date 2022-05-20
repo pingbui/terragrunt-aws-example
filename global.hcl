@@ -32,7 +32,7 @@ locals {
   }
 
   ##S3 and CloudFront:
-  state_region = "${local.main_region}" // Region of tfstate
+  state_region = get_env("STATE_REGION", local.main_region) // Region of tfstate
 
   cf_settings = {
   }

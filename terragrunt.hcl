@@ -14,6 +14,7 @@ locals {
   project_name = try(local.global_vars.locals.project_name, "example")
   account_id   = try(local.account_vars.locals.aws_account_id, "987654321012")
   aws_region   = local.region_vars.locals.aws_region
+  state_region = local.global_vars.locals.state_region
 }
 
 terraform {
@@ -37,7 +38,7 @@ remote_state {
     encrypt        = true
     bucket         = format("${local.project_name}-tfstate-%s", get_aws_account_id())
     key            = local.env == "common" ? "${path_relative_to_include()}/terraform.tfstate" : "${replace(path_relative_to_include(), "env/", "${local.env}/")}/terraform.tfstate"
-    region         = try(local.global_vars.locals.state_region, local.aws_region)
+    region         = try(local.state_region, local.aws_region)
     dynamodb_table = "${local.project_name}-terraform-locks"
 
     skip_metadata_api_check     = true // commented when using with iam_role on ec2
