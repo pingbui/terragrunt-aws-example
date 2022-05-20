@@ -5,15 +5,16 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 locals {
-  global_vars  = read_terragrunt_config(find_in_parent_folders("global.hcl"))
-  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
-  region_vars  = read_terragrunt_config(find_in_parent_folders("region.hcl"))
-  env_vars     = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  global_vars  = read_terragrunt_config(find_in_parent_folders("global.hcl", "global.hcl"))
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl", "account.hcl"))
+  region_vars  = read_terragrunt_config(find_in_parent_folders("region.hcl", "global.hcl"))
+  env_vars     = read_terragrunt_config(find_in_parent_folders("env.hcl", "global.hcl"))
 
   # Extract the variables we need for easy access
   project_name = try(local.global_vars.locals.project_name, "example")
   account_id   = try(local.account_vars.locals.aws_account_id, "987654321012")
-  aws_region   = local.region_vars.locals.aws_region
+  aws_region   = try(local.region_vars.locals.aws_region, "us-east-1")
+  env          = try(local.env_vars.locals.env, "dev")
   state_region = local.global_vars.locals.state_region
 }
 
@@ -36,7 +37,7 @@ remote_state {
 
   config = {
     encrypt        = true
-    bucket         = format("${local.project_name}-tfstate-%s", get_aws_account_id())
+    bucket         = format("${local.project_name}-tfstate-%s", try(get_aws_account_id(), local.account_id))
     key            = local.env == "common" ? "${path_relative_to_include()}/terraform.tfstate" : "${replace(path_relative_to_include(), "env/", "${local.env}/")}/terraform.tfstate"
     region         = try(local.state_region, local.aws_region)
     dynamodb_table = "${local.project_name}-terraform-locks"
