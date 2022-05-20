@@ -3,6 +3,7 @@ repos:
     rev:  v1.71.0
     hooks:
       - id: terragrunt_fmt
+      #- id: terragrunt_validate
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
