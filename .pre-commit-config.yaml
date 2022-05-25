@@ -6,7 +6,7 @@ repos:
       - id: terragrunt_validate
         exclude: |
           (?x)^(
-            terragrunt.hcl|
+            .*\.hcl|
             _envcommon/.*
           )$
 
