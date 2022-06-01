@@ -18,8 +18,17 @@ locals {
   project_name = try(local.global_vars.locals.project_name, "example")
   name_prefix  = lower("${local.project_name}-${local.env}")
   bname        = basename(get_terragrunt_dir())
+  name         = "${local.name_prefix}-${local.bname}"
+
+  tags = merge(
+    try(local.global_vars.locals.tags, {}),
+    {
+      Env       = local.env_desc
+      Namespace = local.project_name
+    }
+  )
 }
 
 inputs = {
-  name = "${local.name_prefix}-${local.bname}"
+  name = local.name
 }
