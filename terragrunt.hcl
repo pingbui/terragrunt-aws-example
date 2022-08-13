@@ -7,8 +7,8 @@
 locals {
   global_vars  = read_terragrunt_config(find_in_parent_folders("global.hcl", "global.hcl"))
   account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl", "account.hcl"))
-  region_vars  = read_terragrunt_config(find_in_parent_folders("region.hcl", "global.hcl"))
-  env_vars     = read_terragrunt_config(find_in_parent_folders("env.hcl", "global.hcl"))
+  region_vars  = read_terragrunt_config(find_in_parent_folders("region.hcl", "./env/global/region.hcl"))
+  env_vars     = read_terragrunt_config(find_in_parent_folders("env.hcl", "./env/env.hcl"))
 
   # Extract the variables we need for easy access
   project_name = try(local.global_vars.locals.project_name, "example")
