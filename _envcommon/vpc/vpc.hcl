@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=v3.11.3"
+  source = "github.com/terraform-aws-modules/terraform-aws-vpc.git//.?ref=v3.19.0"
 }
 
 ## Dependencies:

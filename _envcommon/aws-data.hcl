@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/pingbui/terraform-modules.git//aws-data?ref=0.2.6"
+  source = "github.com/pingbui/terraform-aws.git//aws-data?ref=0.3.1"
 }
 
 ## Variables:

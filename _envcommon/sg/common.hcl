@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/terraform-aws-modules/terraform-aws-security-group.git?ref=v4.0.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-security-group.git//.?ref=v4.0.0"
 }
 
 ## Dependencies:

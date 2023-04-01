@@ -3,7 +3,7 @@ include "root" {
 }
 
 include "envcommon" {
-  path = "${dirname(find_in_parent_folders())}/_envcommon/keypair/${basename(get_terragrunt_dir())}.hcl"
+  path = "${dirname(find_in_parent_folders())}/_envcommon/${basename(get_terragrunt_dir())}.hcl"
 }
 
 ## Variables:

@@ -15,7 +15,7 @@ locals {
   account_id   = try(local.account_vars.locals.aws_account_id, "987654321012")
   aws_region   = try(local.region_vars.locals.aws_region, "us-east-1")
   env          = try(local.env_vars.locals.env, "dev")
-  state_region = local.global_vars.locals.state_region
+  state_region = try(local.global_vars.locals.state_region, "us-east-1")
 }
 
 terraform {
@@ -57,7 +57,7 @@ provider "aws" {
   allowed_account_ids = ["${local.account_id}"]
 
   # Make it faster by skipping something
-  skip_get_ec2_platforms      = true
+  # skip_get_ec2_platforms    = true
   skip_metadata_api_check     = true // commented when using with iam_role on ec2
   skip_region_validation      = true
   skip_credentials_validation = true
