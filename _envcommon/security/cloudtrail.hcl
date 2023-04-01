@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/cloudposse/terraform-aws-cloudtrail.git?ref=0.21.0"
+  source = "github.com/cloudposse/terraform-aws-cloudtrail.git//.?ref=0.21.0"
 }
 
 ## Dependencies:

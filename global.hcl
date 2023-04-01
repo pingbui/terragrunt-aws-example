@@ -12,7 +12,7 @@ locals {
   }
 
   ## For VPCs:
-  cidr_newbits = 4
+  cidr_newbits = 8
   cidrs = {
     dev  = { "${local.main_region}" = "10.1.0.0/16" }
     prod = { "${local.main_region}" = "10.10.0.0/16" }

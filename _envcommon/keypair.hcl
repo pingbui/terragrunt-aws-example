@@ -1,14 +1,5 @@
 terraform {
-  source = "github.com/terraform-aws-modules/terraform-aws-key-pair.git?ref=v1.0.1"
-}
-
-## Dependencies:
-dependencies {
-  paths = ["../ssh-keys"]
-}
-
-dependency "ssh" {
-  config_path = "../ssh-keys"
+  source = "github.com/pingbui/terraform-aws.git//keypair?ref=0.2.2"
 }
 
 ## Variables:
@@ -30,7 +21,7 @@ locals {
 }
 
 inputs = {
-  key_name   = local.key_name
-  public_key = try(dependency.ssh.outputs.public_keys[local.key_name], "")
-  tags       = local.tags
+  names    = [local.key_name]
+  save_dir = get_terragrunt_dir()
+  tags     = local.tags
 }

@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/terraform-aws-modules/terraform-aws-s3-bucket.git?ref=v2.13.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-s3-bucket.git//.?ref=v3.8.2"
 }
 
 ## Variables:
@@ -30,4 +30,7 @@ inputs = {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+
+  # Tags
+  tags = local.tags
 }

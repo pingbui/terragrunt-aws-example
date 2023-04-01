@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/terraform-google-modules/module-name.git?ref=v1.0.0"
+  source = "github.com/terraform-google-modules/module-name.git//.?ref=v1.0.0"
 }
 
 ## Dependencies:
