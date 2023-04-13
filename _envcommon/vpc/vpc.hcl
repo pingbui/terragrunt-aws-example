@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/terraform-aws-modules/terraform-aws-vpc.git//.?ref=v3.19.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-vpc.git//.?ref=${local.version}"
 }
 
 ## Dependencies:
@@ -20,10 +20,12 @@ locals {
   env          = try(local.env_vars.locals.env, "dev")
   env_desc     = try(local.env_vars.locals.env_desc, "example")
   project_name = try(local.global_vars.locals.project_name, "example")
+  vpc_settings = try(local.global_vars.locals.vpc_settings[local.env], {})
+  version      = try(local.vpc_settings["version"], local.global_vars.locals.vpc_settings["version"], "v4.0.1")
 
   name         = "${local.project_name}-${local.env}"
-  cidr         = try(local.global_vars.locals.cidrs["${local.env}"]["${local.aws_region}"], "10.200.0.0/20")
-  cidr_newbits = try(local.global_vars.locals.cidr_newbits, "4")
+  cidr         = try(local.vpc_settings.cidr, "10.200.0.0/20")
+  cidr_newbits = try(local.vpc_settings.cidr_newbits, "4")
 
   tags = merge(
     try(local.global_vars.locals.tags, {}),
@@ -51,15 +53,15 @@ inputs = {
     "${cidrsubnet(local.cidr, local.cidr_newbits, 5)}",
   ]
 
-  enable_nat_gateway           = try(local.global_vars.locals.vpc_settings["${local.env}"]["enable_nat_gateway"], false)
-  single_nat_gateway           = try(local.global_vars.locals.vpc_settings["${local.env}"]["single_nat_gateway"], true)
-  enable_dns_support           = try(local.global_vars.locals.vpc_settings["${local.env}"]["enable_dns_support"], true)
-  enable_dns_hostnames         = try(local.global_vars.locals.vpc_settings["${local.env}"]["enable_dns_hostnames"], true)
-  enable_vpn_gateway           = try(local.global_vars.locals.vpc_settings["${local.env}"]["enable_vpn_gateway"], false)
-  map_public_ip_on_launch      = try(local.global_vars.locals.vpc_settings["${local.env}"]["map_public_ip_on_launch"], false)
-  create_database_subnet_group = try(local.global_vars.locals.vpc_settings["${local.env}"]["create_database_subnet_group"], false)
-  enable_dhcp_options          = try(local.global_vars.locals.vpc_settings["${local.env}"]["enable_dhcp_options"], true)
-  dhcp_options_domain_name     = try(local.global_vars.locals.domain_locals["${local.env}"], "${local.env}.local")
+  enable_nat_gateway           = try(local.vpc_settings["enable_nat_gateway"], false)
+  single_nat_gateway           = try(local.vpc_settings["single_nat_gateway"], true)
+  enable_dns_support           = try(local.vpc_settings["enable_dns_support"], true)
+  enable_dns_hostnames         = try(local.vpc_settings["enable_dns_hostnames"], true)
+  enable_vpn_gateway           = try(local.vpc_settings["enable_vpn_gateway"], false)
+  map_public_ip_on_launch      = try(local.vpc_settings["map_public_ip_on_launch"], false)
+  create_database_subnet_group = try(local.vpc_settings["create_database_subnet_group"], false)
+  enable_dhcp_options          = try(local.vpc_settings["enable_dhcp_options"], true)
+  dhcp_options_domain_name     = try(local.global_vars.locals.domain_locals[local.env], "")
   tags                         = local.tags
 
 }

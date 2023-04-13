@@ -4,7 +4,7 @@ locals {
   noti_user      = get_env("NOTI_USER", "admin")
   noti_domain    = get_env("NOTI_DOMAIN", "example.com")
   ssh_user       = get_env("SSH_USER", local.project_name)
-  main_region    = "us-east-1" // Main Region of this project
+  main_region    = get_env("MAIN_REGION", "us-east-1") // Main Region of this project
 
   mnt_ips = {
     "${local.operation_team}_ip1" = "1.2.3.4/32",
@@ -12,14 +12,10 @@ locals {
   }
 
   ## For VPCs:
-  cidr_newbits = 8
-  cidrs = {
-    dev  = { "${local.main_region}" = "10.1.0.0/16" }
-    prod = { "${local.main_region}" = "10.10.0.0/16" }
-  }
-
   vpc_settings = {
     prod = {
+      cidr               = "10.10.0.0/16"
+      cidr_newbits       = 8
       enable_nat_gateway = true
       single_nat_gateway = false
     }
