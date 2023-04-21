@@ -1,0 +1,62 @@
+default:
+  image:
+    name: alpine/terragrunt:1.3.6
+  cache:
+    key: .terragrunt
+    paths:
+      - ${TG_ROOT}/.terragrunt-cache
+
+variables:
+  TG_ROOT: .
+
+before_script:
+  - cd ${TG_ROOT}
+
+include:
+  template: Jobs/SAST-IaC.gitlab-ci.yml
+
+stages:
+  - fmt
+  - security
+  - test
+
+fmt:
+  stage: fmt
+  script:
+    - terragrunt hclfmt
+  allow_failure: false
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "*.hcl"
+      - "**/*.hcl"
+
+trivy:
+  stage: security
+  image:
+    name: docker.io/aquasec/trivy:latest
+    entrypoint: [""]
+  needs: [fmt]
+  script:
+    - trivy --version
+    - trivy config --severity CRITICAL --exit-code 1 ${TG_ROOT}
+  cache:
+    paths:
+      - .trivycache/
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "*.hcl"
+      - "**/*.hcl"
+
+kics:
+  stage: test
+  extends: kics-iac-sast
+  dependencies: [fmt]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - "*.hcl"
+        - "**/*.hcl"
