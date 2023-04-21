@@ -4,6 +4,7 @@ set -e
 ## vars:
 MAIN_REGION=${MAIN_REGION:-$(grep MAIN_REGION global.hcl 2> /dev/null | head -1 | awk -F\" '{print $4}')}
 CUR_REGION=$(basename "$(find env -type d -name '*-[1-9]' | head -1)")
+AWS_ID=$(aws sts get-caller-identity 2> /dev/null | jq -r .Account)
 
 ## functions:
 function printLogs() {
@@ -31,6 +32,14 @@ if [[ -n $MAIN_REGION ]] && [[ -n $CUR_REGION ]]; then
   fi
 else
   printLogs 3 "One of MAIN_REGION or CUR_REGION is empty!"
+fi
+
+## Change AWS_ID:
+if [[ -n $AWS_ID ]]; then
+  printLogs 6 "Change aws_id into $AWS_ID"
+  sed -i '' 's~"987654321012"~"'"$AWS_ID"'"~g' account.hcl
+else
+  printLogs 3 "AWS_ID is empty!"
 fi
 
 exit 0
